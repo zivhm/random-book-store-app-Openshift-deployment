@@ -27,10 +27,6 @@ docker build -t random-book-store:latest .
 #### Step 2: Tag and Push to Registry
 
 ```bash
-# Example with Quay.io
-docker tag random-book-store:latest quay.io/<your-username>/random-book-store:latest
-docker push quay.io/<your-username>/random-book-store:latest
-
 # Example with OpenShift internal registry
 oc create imagestream random-book-store
 docker tag random-book-store:latest default-route-openshift-image-registry/<your-project>/random-book-store:latest
@@ -312,23 +308,7 @@ oc set env deployment/random-book-store \
   DATABASE_URL="postgresql://random_book_store:password@postgresql:5432/random_book_store"
 ```
 
-### 2. Security Best Practices
-
-- **Secrets Management**
-  - Never commit secrets to Git
-  - Use OpenShift secrets (`oc create secret`)
-  - Rotate secrets regularly
-  - Use different secrets per environment
-
-- **Network Policies**
-  - Restrict pod-to-pod communication
-  - Limit external access
-
-- **RBAC**
-  - Use service accounts with minimal permissions
-  - Avoid using cluster-admin
-
-### 3. Scaling and Resources
+### 2. Scaling and Resources
 
 **Horizontal Scaling:**
 ```bash
@@ -346,34 +326,26 @@ Edit `openshift/deployment.yaml` and adjust:
 - `requests`: Guaranteed resources
 - `limits`: Maximum resources allowed
 
-### 4. Monitoring and Logging
+### 3. Monitoring and Logging
 
 - **Built-in Health Checks**: Already configured (`/health`, `/ready`)
 - **Prometheus Metrics**: Available via OpenShift monitoring
 - **Logs**: Access with `oc logs -f deployment/random-book-store`
 - **Events**: Monitor with `oc get events --sort-by='.lastTimestamp'`
 
-### 5. Persistent Storage
+### 4. Persistent Storage
 
 The application uses a PVC for SQLite database:
 - **Storage Class**: Adjust in `openshift/pvc.yaml` based on your cluster
 - **Backups**: Schedule regular database backups
 - **Size**: Default is 1Gi, increase if needed
 
-### 6. TLS/SSL
+### 5. TLS/SSL
 
 Routes use edge TLS termination by default:
 - Certificates managed by OpenShift
 - HTTP automatically redirects to HTTPS
 - Custom certificates: Update `openshift/route.yaml`
-
-## Performance Tips
-
-1. **Use Gunicorn workers**: Already configured (4 workers)
-2. **Enable HTTP caching**: Add caching headers for static assets
-3. **CDN**: Use CDN for static files in production
-4. **Database indexing**: Add indexes for frequently queried fields
-5. **Connection pooling**: Configure for PostgreSQL
 
 ## Additional Resources
 
