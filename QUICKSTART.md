@@ -159,7 +159,6 @@ curl https://$ROUTE/ready
 
 ---
 
-**Built with ❤️ using Flask, Open Library API, APScheduler, and OpenShift**
 
 ## Configuration
 

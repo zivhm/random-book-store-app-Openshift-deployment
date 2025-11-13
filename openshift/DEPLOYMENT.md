@@ -55,12 +55,12 @@ oc new-build --name=random-book-store --binary --strategy=docker
 **Your output should look like this:**
 ```
     * A Docker build using binary input will be created
-      * The resulting image will be pushed to image stream tag "random-books-store:latest"
+      * The resulting image will be pushed to image stream tag "random-book-store:latest"
       * A binary build was created, use 'oc start-build --from-dir' to trigger a new build
 
---> Creating resources with label build=random-books-store ...
-    imagestream.image.openshift.io "random-books-store" created
-    buildconfig.build.openshift.io "random-books-store" created
+--> Creating resources with label build=random-book-store ...
+    imagestream.image.openshift.io "random-book-store" created
+    buildconfig.build.openshift.io "random-book-store" created
 --> Success
 ```
 
@@ -74,13 +74,13 @@ oc start-build random-book-store --from-dir=. --follow
 Uploading directory "." as binary input for the build ...
 ..
 Uploading finished
-build.build.openshift.io/random-books-store-1 started
+build.build.openshift.io/random-book-store-1 started
 Receiving source from STDIN as archive ...
 .
 .
 .
 Writing manifest to image destination
-Successfully pushed image-registry.openshift-image-registry.svc:5000/random-book-store-app/random-books-store@sha256:f6a62dbbe4a8266382e6e2a2420b7848fb77ff01034108d967d0fdec06ebf42c
+Successfully pushed image-registry.openshift-image-registry.svc:5000/random-book-store-app/random-book-store@sha256:f6a62dbbe4a8266382e6e2a2420b7848fb77ff01034108d967d0fdec06ebf42c
 Push successful
 ```
 
@@ -121,7 +121,7 @@ oc new-app random-book-store \
 ```
 **Your output should look like this:**
 ```
---> Found image 416c233 (4 minutes old) in image stream "random-book-store-app/random-books-store" under tag "latest" for "random-books-store"
+--> Found image 416c233 (4 minutes old) in image stream "random-book-store-app/random-book-store" under tag "latest" for "random-book-store"
 
     Python 3.12 
     ----------- 
@@ -229,10 +229,10 @@ oc get events --sort-by='.lastTimestamp' | tail -10
 34m         Normal    AddedInterface          pod/random-book-store-6bbccd98d8-gkd5n        Add eth0 [5.160.243.162/23] from ovn-kubernetes
 34m         Normal    ScalingReplicaSet       deployment/random-book-store                  Scaled down replica set random-book-store-79f4dbc748 from 1 to 0
 34m         Normal    SuccessfulDelete        replicaset/random-book-store-79f4dbc748       Deleted pod: random-book-store-79f4dbc748-thb55
-34m         Normal    Killing                 pod/random-book-store-79f4dbc748-thb55        Stopping container random-books-store
-33m         Normal    Pulled                  pod/random-book-store-6bbccd98d8-gkd5n        Container image "image-registry.openshift-image-registry.svc:5000/random-book-store-app/random-books-store@sha256:f6a62dbbe4a8266382e6e2a2420b7848fb77ff01034108d967d0fdec06ebf42c" already present on machine
-33m         Normal    Created                 pod/random-book-store-6bbccd98d8-gkd5n        Created container: random-books-store
-33m         Normal    Started                 pod/random-book-store-6bbccd98d8-gkd5n        Started container random-books-store
+34m         Normal    Killing                 pod/random-book-store-79f4dbc748-thb55        Stopping container random-book-store
+33m         Normal    Pulled                  pod/random-book-store-6bbccd98d8-gkd5n        Container image "image-registry.openshift-image-registry.svc:5000/random-book-store-app/random-book-store@sha256:f6a62dbbe4a8266382e6e2a2420b7848fb77ff01034108d967d0fdec06ebf42c" already present on machine
+33m         Normal    Created                 pod/random-book-store-6bbccd98d8-gkd5n        Created container random-book-store
+33m         Normal    Started                 pod/random-book-store-6bbccd98d8-gkd5n        Started container random-book-store
 ```
 
 #### Updating Your Application
@@ -423,14 +423,11 @@ oc create secret generic random-book-store-secret \
 oc new-app python:3.12-ubi9~<your-git-repo-url> \
   --name=random-book-store \
   --env SECRET_KEY=$(oc get secret random-book-store-secret -o jsonpath='{.data.secret-key}' | base64 -d)
-
-# Or if using a specific branch
-oc new-app python:3.12~<your-git-repo-url>#<branch-name> --name=random-book-store
 ```
 
 **Your output should look like this:**
 ```
---> Found image abc1234 (2 weeks old) in image stream "openshift/python" under tag "3.12" for "python:3.12"
+--> Found image d00084d (2 months old) in image stream "openshift/python" under tag "3.12-ubi9" for "python:3.12-ubi9"
 --> Creating resources ...
     imagestream.image.openshift.io "random-book-store" created
     buildconfig.build.openshift.io "random-book-store" created
@@ -439,7 +436,8 @@ oc new-app python:3.12~<your-git-repo-url>#<branch-name> --name=random-book-stor
 --> Success
     Build scheduled, use 'oc logs -f buildconfig/random-book-store' to track its progress.
     Application is not exposed. You can expose services to the outside world by executing one or more of the commands below:
-     'oc expose service/random-book-store'
+     'oc expose service/random-book-store' 
+    Run 'oc status' to view your app.
 ```
 
 #### S2I Build Hooks (Optional but Recommended)
@@ -543,30 +541,6 @@ exec gunicorn \
 **Add Hooks to Your Repository:**
 
 ```bash
-# Create hook directory structure
-mkdir -p .s2i/bin
-
-# Create pre_build hook
-cat > .s2i/bin/pre_build << 'EOF'
-#!/bin/bash
-echo "🔧 Running pre-build hook..."
-python --version
-pip --version
-echo "✅ Pre-build hook completed"
-EOF
-
-# Create post_build hook
-cat > .s2i/bin/post_build << 'EOF'
-#!/bin/bash
-echo "🧪 Running post-build hook..."
-pip list
-find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
-echo "✅ Post-build hook completed"
-EOF
-
-# Make hooks executable
-chmod +x .s2i/bin/*
-
 # Commit and push
 git add .s2i/
 git commit -m "Add S2I build hooks"
