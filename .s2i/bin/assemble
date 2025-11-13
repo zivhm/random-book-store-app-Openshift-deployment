@@ -16,9 +16,15 @@ echo "---> Calling default Python assemble script..."
 /usr/libexec/s2i/assemble
 
 # Run post_build hook if it exists
+# Check both possible locations
 if [ -f /tmp/src/.s2i/bin/post_build ]; then
   echo "---> Executing post_build hook..."
   /tmp/src/.s2i/bin/post_build
+elif [ -f ./.s2i/bin/post_build ]; then
+  echo "---> Executing post_build hook (from current dir)..."
+  ./.s2i/bin/post_build
+else
+  echo "---> Post-build hook not found, skipping..."
 fi
 
 echo "---> Custom assemble script completed"
