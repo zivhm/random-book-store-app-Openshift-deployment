@@ -73,7 +73,7 @@ This application follows OpenShift security and deployment best practices:
 To reset the database and fetch new books from Open Library:
 
 ```bash
-rm random-bookstore.db
+rm random-book-store.db
 python wsgi.py
 ```
 
@@ -83,13 +83,13 @@ python wsgi.py
 
 1. Build the container image:
    ```bash
-   podman build -t random-bookstore:latest .
+   docker build -t random-book-store:latest .
    ```
 
 2. Tag and push to your registry:
    ```bash
-   podman tag random-bookstore:latest <your-registry>/random-bookstore:latest
-   podman push <your-registry>/random-bookstore:latest
+   docker tag random-book-store:latest <your-registry>/random-book-store:latest
+   docker push <your-registry>/random-book-store:latest
    ```
 
 3. Update `openshift/deployment.yaml` with your image registry.
@@ -104,17 +104,17 @@ python wsgi.py
 1. Create a new application from source:
    ```bash
    oc new-app python:3.12~https://github.com/<your-repo>/store-app \
-     --name=random-bookstore
+     --name=random-book-store
    ```
 
 2. Expose the service:
    ```bash
-   oc expose svc/random-bookstore
+   oc expose svc/random-book-store
    ```
 
 3. Get the route URL:
    ```bash
-   oc get route random-bookstore
+   oc get route random-book-store
    ```
 
 See `openshift/DEPLOYMENT.md` for detailed deployment instructions.
@@ -131,7 +131,7 @@ See `openshift/DEPLOYMENT.md` for detailed deployment instructions.
 
 ### Database
 
-- **Development**: Uses SQLite (`random-bookstore.db`)
+- **Development**: Uses SQLite (`random-book-store.db`)
 - **Production**: Configure `DATABASE_URL` for PostgreSQL
 
 ## Health Endpoints
