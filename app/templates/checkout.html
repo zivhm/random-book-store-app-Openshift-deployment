@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - Bookstore{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Checkout</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Order Summary</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in cart_items %}
+                        <tr>
+                            <td>{{ item.book.title }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ "%.2f"|format(item.book.price) }}</td>
+                            <td>${{ "%.2f"|format(item.get_subtotal()) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="alert alert-info">
+            <strong>Note:</strong> This is a demo application. No actual payment will be processed.
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Payment Summary</h5>
+            </div>
+            <div class="card-body">
+                <p class="d-flex justify-content-between">
+                    <span>Total:</span>
+                    <strong class="text-success">${{ "%.2f"|format(total) }}</strong>
+                </p>
+                <hr>
+                <form method="POST" action="{{ url_for('main.complete_checkout') }}">
+                    <button type="submit" class="btn btn-success w-100 mb-2">Complete Order</button>
+                </form>
+                <a href="{{ url_for('main.cart') }}" class="btn btn-outline-secondary w-100">Back to Cart</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
