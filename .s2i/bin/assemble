@@ -1,0 +1,24 @@
+#!/bin/bash
+# Custom S2I assemble script that calls hooks
+
+set -e
+
+echo "---> Running custom assemble script with hooks support"
+
+# Run pre_build hook if it exists
+if [ -f /tmp/src/.s2i/bin/pre_build ]; then
+  echo "---> Executing pre_build hook..."
+  /tmp/src/.s2i/bin/pre_build
+fi
+
+# Call the default Python S2I assemble script
+echo "---> Calling default Python assemble script..."
+/usr/libexec/s2i/assemble
+
+# Run post_build hook if it exists
+if [ -f /tmp/src/.s2i/bin/post_build ]; then
+  echo "---> Executing post_build hook..."
+  /tmp/src/.s2i/bin/post_build
+fi
+
+echo "---> Custom assemble script completed"
