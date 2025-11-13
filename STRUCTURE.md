@@ -33,6 +33,13 @@ store-app/
 │       ├── login.html           # Login page
 │       └── register.html        # Registration page
 │
+├── .s2i/                         # Source-to-Image build hooks
+│   └── bin/
+│       ├── assemble              # Custom build script
+│       ├── pre_build             # Pre-build hook
+│       ├── post_build            # Post-build hook
+│       └── run                   # Container startup script
+│
 ├── openshift/                    # OpenShift deployment manifests
 │   ├── all-in-one.yaml          # Single file deployment
 │   ├── deployment.yaml          # Deployment configuration
@@ -74,6 +81,12 @@ store-app/
 - **`routes.py`**: All Flask routes including health checks (`/health`, `/ready`)
 - **`templates/`**: Jinja2 HTML templates with Bootstrap 5 styling
 - **`static/`**: CSS and SVG placeholder for book covers
+
+### S2I Build Hooks (`.s2i/`)
+- **`assemble`**: Custom build script that calls pre/post build hooks
+- **`pre_build`**: Runs before pip install (verify Python version, setup environment)
+- **`post_build`**: Runs after dependencies installed (cleanup, list packages)
+- **`run`**: Custom container startup script with Gunicorn configuration
 
 ### OpenShift Deployment (`openshift/`)
 - **`all-in-one.yaml`**: Complete deployment in single file (easiest option)

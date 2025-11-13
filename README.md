@@ -79,45 +79,75 @@ python wsgi.py
 
 ## OpenShift Deployment
 
-### Method 1: Using Pre-built Container Image
+### Option 1: Local OpenShift Build (Recommended for Local Development)
 
-1. Build the container image:
-   ```bash
-   docker build -t random-book-store:latest .
-   ```
+Build the container directly in OpenShift from local source:
 
-2. Tag and push to your registry:
-   ```bash
-   docker tag random-book-store:latest <your-registry>/random-book-store:latest
-   docker push <your-registry>/random-book-store:latest
-   ```
+```bash
+# Create project and build
+cd /path/to/store-app
+oc new-project random-book-store-app
+oc new-build --name=random-book-store --binary --strategy=docker
+oc start-build random-book-store --from-dir=. --follow
 
-3. Update `openshift/deployment.yaml` with your image registry.
+# Deploy
+oc create secret generic random-book-store-secret \
+  --from-literal=secret-key=$(openssl rand -hex 32)
+oc apply -f openshift/pvc.yaml
+oc new-app random-book-store --name=random-book-store
+oc set env deployment/random-book-store --from secret/random-book-store-secret
+oc set volume deployment/random-book-store \
+  --add --name=data --type=persistentVolumeClaim \
+  --claim-name=random-book-store-pvc --mount-path=/opt/app-root/src/data
+oc expose svc/random-book-store
 
-4. Deploy to OpenShift:
-   ```bash
-   oc apply -f openshift/
-   ```
+# Get URL
+oc get route random-book-store
+```
 
-### Method 2: Using Source-to-Image (S2I)
+### Option 2: Using Docker Hub (For Production/Sharing)
 
-1. Create a new application from source:
-   ```bash
-   oc new-app python:3.12~https://github.com/<your-repo>/store-app \
-     --name=random-book-store
-   ```
+Build locally and push to Docker Hub:
 
-2. Expose the service:
-   ```bash
-   oc expose svc/random-book-store
-   ```
+```bash
+# Build and push to Docker Hub
+docker build -t random-book-store:latest .
+docker tag random-book-store:latest <your-dockerhub-username>/random-book-store:latest
+docker push <your-dockerhub-username>/random-book-store:latest
 
-3. Get the route URL:
-   ```bash
-   oc get route random-book-store
-   ```
+# Deploy from Docker Hub
+oc new-project random-book-store-app
+oc create secret generic random-book-store-secret \
+  --from-literal=secret-key=$(openssl rand -hex 32)
+oc apply -f openshift/pvc.yaml
+oc new-app <your-dockerhub-username>/random-book-store:latest --name=random-book-store
+oc set env deployment/random-book-store --from secret/random-book-store-secret
+oc set volume deployment/random-book-store \
+  --add --name=data --type=persistentVolumeClaim \
+  --claim-name=random-book-store-pvc --mount-path=/opt/app-root/src/data
+oc expose svc/random-book-store
+```
 
-See `openshift/DEPLOYMENT.md` for detailed deployment instructions.
+### Option 3: Using Source-to-Image (For Git Repositories)
+
+Let OpenShift build from your Git repository:
+
+```bash
+# Deploy from GitHub (requires public repo or authentication)
+oc new-project random-book-store-app
+oc create secret generic random-book-store-secret \
+  --from-literal=secret-key=$(openssl rand -hex 32)
+oc new-app python:3.12-ubi9~https://github.com/<your-repo>/store-app \
+  --name=random-book-store
+oc apply -f openshift/pvc.yaml
+oc set volume deployment/random-book-store \
+  --add --name=data --type=persistentVolumeClaim \
+  --claim-name=random-book-store-pvc --mount-path=/opt/app-root/src/data
+oc expose svc/random-book-store
+oc get route random-book-store
+```
+
+**For detailed instructions, S2I build hooks, and troubleshooting**, see `openshift/DEPLOYMENT.md`.
 
 ## Configuration
 

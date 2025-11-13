@@ -55,7 +55,7 @@ Open your browser to: **http://localhost:8080**
 Get fresh books from Open Library:
 
 ```bash
-rm bookstore.db
+rm random-book-store.db
 python wsgi.py
 ```
 
