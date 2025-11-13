@@ -80,7 +80,7 @@ Receiving source from STDIN as archive ...
 .
 .
 Writing manifest to image destination
-Successfully pushed image-registry.openshift-image-registry.svc:5000/random-book-store-app/random-book-store@sha256:f6a62dbbe4a8266382e6e2a2420b7848fb77ff01034108d967d0fdec06ebf42c
+Successfully pushed image-registry.openshift-image-registry.svc:5000/random-book-store-app/random-book-store@sha256:abc123def456...
 Push successful
 ```
 
@@ -122,14 +122,6 @@ oc new-app random-book-store \
 **Your output should look like this:**
 ```
 --> Found image 416c233 (4 minutes old) in image stream "random-book-store-app/random-book-store" under tag "latest" for "random-book-store"
-
-    Python 3.12 
-    ----------- 
-    Python 3.12 available as container is a base platform for building and running various Python 3.12 applications and frameworks. Python is an easy to learn, powerful programming language. It has efficient high-level data structures and a simple but effective approach to object-oriented programming. Python's elegant syntax and dynamic typing, together with its interpreted nature, make it an ideal language for scripting and rapid application development in many areas on most platforms.
-
-    Tags: builder, python, python312, python-312, rh-python312
-
-
 --> Creating resources ...
     deployment.apps "random-book-store" created
     service "random-book-store" created
@@ -230,7 +222,7 @@ oc get events --sort-by='.lastTimestamp' | tail -10
 34m         Normal    ScalingReplicaSet       deployment/random-book-store                  Scaled down replica set random-book-store-79f4dbc748 from 1 to 0
 34m         Normal    SuccessfulDelete        replicaset/random-book-store-79f4dbc748       Deleted pod: random-book-store-79f4dbc748-thb55
 34m         Normal    Killing                 pod/random-book-store-79f4dbc748-thb55        Stopping container random-book-store
-33m         Normal    Pulled                  pod/random-book-store-6bbccd98d8-gkd5n        Container image "image-registry.openshift-image-registry.svc:5000/random-book-store-app/random-book-store@sha256:f6a62dbbe4a8266382e6e2a2420b7848fb77ff01034108d967d0fdec06ebf42c" already present on machine
+33m         Normal    Pulled                  pod/random-book-store-6bbccd98d8-gkd5n        Container image "image-registry.openshift-image-registry.svc:5000/random-book-store-app/random-book-store@sha256:abc123def456..." already present on machine
 33m         Normal    Created                 pod/random-book-store-6bbccd98d8-gkd5n        Created container random-book-store
 33m         Normal    Started                 pod/random-book-store-6bbccd98d8-gkd5n        Started container random-book-store
 ```
@@ -551,7 +543,8 @@ git push
 
 ```bash
 # Start a new build (hooks will run automatically)
-oc start-build random-book-store --follow
+# The repo has to be either public or accessible after authentication
+oc start-build random-book-store --follow 
 
 # Watch build logs to see hooks in action
 oc logs -f buildconfig/random-book-store
