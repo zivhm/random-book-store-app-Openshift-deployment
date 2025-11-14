@@ -10,12 +10,12 @@
     <div class="col-md-3 mb-4">
         <div class="card h-100">
             <img src="{{ book.cover_image }}" class="card-img-top book-cover-catalog" alt="{{ book.title }}" onerror="this.src='{{ url_for('static', filename='images/book-placeholder.svg') }}'">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">{{ book.title }}</h5>
-                <h6 class="card-subtitle mb-2 text-muted">{{ book.author }}</h6>
-                <p class="card-text small flex-grow-1">{{ book.description[:80] }}...</p>
-                <p class="text-success fw-bold mb-1">${{ "%.2f"|format(book.price) }}</p>
-                <p class="text-muted small mb-3">Stock: {{ book.stock }}</p>
+            <div class="card-body d-flex flex-column p-2">
+                <h6 class="card-title mb-1">{{ book.title }}</h6>
+                <p class="card-subtitle mb-2 text-muted small">{{ book.author }}</p>
+                <p class="card-text small flex-grow-1">{{ book.description[:60] }}...</p>
+                <p class="text-success fw-bold mb-1 small">${{ "%.2f"|format(book.price) }}</p>
+                <p class="text-muted small mb-2">Stock: {{ book.stock }}</p>
                 <div class="d-grid gap-2 mt-auto">
                     <a href="{{ url_for('main.book_detail', book_id=book.id) }}" class="btn btn-primary btn-sm">Details</a>
                     {% if current_user.is_authenticated %}
