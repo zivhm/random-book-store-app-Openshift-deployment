@@ -11,7 +11,7 @@ This application fetches real book data from Open Library API and automatically 
 - [Prerequisites](#prerequisites)
 - [Deployment Options](#deployment-options)
   - [Option 1: Local OpenShift Build](#option-1-local-openshift-build)
-  - [Option 2: Deploy Using Pre-built Container (Docker Hub)](#option-2-deploy-using-pre-built-container-docker-hub----need-to-verify-this--)
+  - [Option 2: Deploy Using Pre-built Container (Docker Hub)](#option-2-deploy-using-pre-built-container-docker-hub)
   - [Option 3: Deploy Using Source-to-Image (S2I)](#option-3-deploy-using-source-to-image-s2i)
     - [S2I Build Hooks](#s2i-build-hooks)
     - [GitHub Webhook Setup](#step-6-set-up-github-webhook-optional---automatic-builds)
