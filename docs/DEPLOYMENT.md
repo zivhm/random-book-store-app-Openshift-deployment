@@ -10,12 +10,12 @@ This application fetches real book data from Open Library API and automatically 
 
 - [Prerequisites](#prerequisites)
 - [Deployment Options](#deployment-options)
-  - [Option 1: Local OpenShift Build (Recommended)](#option-1-local-openshift-build-recommended)
+  - [Option 1: Local OpenShift Build](#option-1-local-openshift-build)
   - [Option 2: Deploy Using Pre-built Container (Docker Hub)](#option-2-deploy-using-pre-built-container-docker-hub----need-to-verify-this--)
   - [Option 3: Deploy Using Source-to-Image (S2I)](#option-3-deploy-using-source-to-image-s2i)
-    - [S2I Build Hooks](#s2i-build-hooks-optional-but-recommended)
+    - [S2I Build Hooks](#s2i-build-hooks)
     - [GitHub Webhook Setup](#step-6-set-up-github-webhook-optional---automatic-builds)
-    - [Manual Build Workflow](#manual-build-workflow-recommended-for-local-crc)
+    - [Manual Build Workflow](#manual-build-workflow-for-local-crc)
 - [Post-Deployment Configuration](#post-deployment-configuration)
   - [Update Secret Key](#update-secret-key-important-for-production)
   - [Scale the Application](#scale-the-application)
@@ -53,9 +53,9 @@ This application follows OpenShift security and deployment best practices:
 
 ## Deployment Options
 
-### Option 1: Local OpenShift Build (Recommended)
+### Option 1: Local OpenShift Build
 
-This method builds the container directly in OpenShift without needing external registry access. **Best for local development and testing.**
+This method builds the container directly in OpenShift without needing external registry access.
 
 #### Prerequisites
 
@@ -284,7 +284,7 @@ oc rollout status deployment/random-book-store
 
 > **⚠️ NOTE:** This deployment method needs to be verified.
 
-This method uses Docker Hub to store your container image. **Best for production deployments or sharing images.**
+This method uses Docker Hub to store your container image.
 
 #### Prerequisites
 
@@ -803,11 +803,11 @@ This is **EXPECTED and NORMAL** for local CRC:
 
 **3. SSL verification errors (Production):**
 - Ensure your production OpenShift cluster has valid SSL certificates
-- For testing only, you can disable SSL verification in GitHub webhook settings (not recommended for production)
+- For testing only, you can disable SSL verification in GitHub webhook settings
 
 ---
 
-### Manual Build Workflow (Recommended for Local CRC)
+### Manual Build Workflow for Local CRC
 
 For local development with CRC, use this workflow:
 
@@ -825,7 +825,7 @@ oc start-build random-book-store --follow
 oc get pods -w
 ```
 
-This is the standard and recommended approach for local OpenShift development.
+This is the standard approach for local OpenShift development.
 
 ---
 
