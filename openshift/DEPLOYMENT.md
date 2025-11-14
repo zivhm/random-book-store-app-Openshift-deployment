@@ -648,7 +648,7 @@ oc apply -f openshift/route.yaml
 oc get route random-book-store -o jsonpath='{.spec.host}'
 ```
 
-#### Step 6: Set Up GitHub Webhook (Optional - Automatic Builds)
+#### Step 6: Set Up GitHub Webhook (Optional - Automatic Builds) #TODO: need to create secret for the hook manually
 
 By default, S2I builds are **not triggered automatically** when you push to GitHub. You must manually run `oc start-build` each time. To enable automatic builds on `git push`, set up a webhook:
 
